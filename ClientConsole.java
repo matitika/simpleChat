@@ -91,6 +91,9 @@ public class ClientConsole implements ChatIF
         	switch (command) {
         	case "quit":
         		client.quit();
+        		if (!client.isConnected()) {
+        			System.exit(0);
+        		}
         	case "logoff":
         		client.closeConnection();
         		break;
@@ -105,7 +108,7 @@ public class ClientConsole implements ChatIF
         		display("Host: " + client.getHost());
         		break;
         	case "getport":
-        		display("Host: " + client.getPort());
+        		display("Port: " + client.getPort());
         		break;
         	default:
         		if (command.startsWith("sethost")) {
