@@ -27,8 +27,49 @@ public class ServerConsole implements ChatIF {
 			
 			while(true) {
 				message = fromConsole.nextLine();
-				System.out.println(">"+message);
-				server.sendToAllClients("SERVER MSG> "+message);
+				if (message.startsWith("#")) {
+		        	String command = message.substring(1);
+		        	switch (command) {
+		        	case "quit":
+		        		System.exit(0);
+		        	case "stop":
+		        		server.stopListening();
+		        		break;
+		        	case "close":
+		        		server.close();
+		        		break;
+		        	case "start":
+		        		if (!server.isListening()) {
+		        			server.listen();
+		        		} else {
+		        			display("Server is already started");
+		        		}
+		        		break;
+		        	case "getport":
+		        		display("Port: " + server.getPort());
+		        		break;
+		        	default:
+		        		if (command.startsWith("setport")) {
+		        			if (server.isListening()) {
+		        				display("Cannot set port while listening");
+		        			} else {
+		        				try {
+		        					int port = Integer.parseInt(command.substring(8).trim());
+									server.setPort(port);
+									display("Port set to: " + port);
+								} catch (NumberFormatException e) {
+									display("Invalid port parameter");
+								}
+		        			}
+		        			break;
+		        		}
+		        		display("Unknown command");
+		        	}
+		        } else {
+		        	display(message);
+		        	server.sendToAllClients("SERVER MSG> "+message);
+		        }
+				
 			}
 			
 		} catch (Exception e) {
