@@ -48,11 +48,17 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
-  {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+  public void handleMessageFromClient(Object msg, ConnectionToClient client) {
+    System.out.println("Message received: " + msg + " from " + client.getInfo("login id") + ".");
+    
+  	if (msg.toString().startsWith("#login")) {
+    	client.setInfo("login id", msg.toString().substring(7));
+    	System.out.println(client.getInfo("login id") + " has logged on.");
+    } else {
+    	this.sendToAllClients(client.getInfo("login id") + ": " + msg.toString());
+    }
+    	
+  	
   }
     
   /**
@@ -62,7 +68,7 @@ public class EchoServer extends AbstractServer
   protected void serverStarted()
   {
     System.out.println
-      ("Server listening for connections on port " + getPort());
+      ("Server listening for clients on port " + getPort());
   }
   
   /**
@@ -116,7 +122,7 @@ public class EchoServer extends AbstractServer
    * @param client the connection connected to the client.
    */
   protected void clientConnected(ConnectionToClient client) {
-	  System.out.println("Client connected: " + client);
+	  System.out.println("A new client has connected to the server.");
   }
 
   /**
@@ -126,9 +132,8 @@ public class EchoServer extends AbstractServer
    *
    * @param client the connection with the client.
    */
-  synchronized protected void clientDisconnected(
-    ConnectionToClient client) {
-	  System.out.println("Client disconnected: " + client);
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+	  System.out.println("Client disconnected: " + client.getInfo("login id"));
   }
 }
 //End of EchoServer class

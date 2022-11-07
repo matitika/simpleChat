@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.Scanner;
 
 import common.ChatIF;
@@ -67,7 +66,7 @@ public class ServerConsole implements ChatIF {
 		        	}
 		        } else {
 		        	display(message);
-		        	server.sendToAllClients("SERVER MSG> "+message);
+		        	server.sendToAllClients("SERVER MESSAGE> "+message);
 		        }
 				
 			}
