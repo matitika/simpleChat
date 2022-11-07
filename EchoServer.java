@@ -24,6 +24,8 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   
+  ServerConsole serverUI;
+  
   //Constructors ****************************************************
   
   /**
@@ -31,9 +33,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ServerConsole serverUI) 
   {
     super(port);
+    this.serverUI = serverUI;
   }
 
   
@@ -94,7 +97,8 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    EchoServer sv = new EchoServer(port);
+    ServerConsole serverUI = new ServerConsole(port);
+    EchoServer sv = new EchoServer(port, serverUI);
     
     try 
     {
