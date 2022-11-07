@@ -86,7 +86,57 @@ public class ClientConsole implements ChatIF
       while (true) 
       {
         message = fromConsole.nextLine();
-        client.handleMessageFromClientUI(message);
+        if (message.startsWith("#")) {
+        	String command = message.substring(1);
+        	switch (command) {
+        	case "quit":
+        		client.quit();
+        	case "logoff":
+        		client.closeConnection();
+        		break;
+        	case "login":
+        		if(client.isConnected()) {
+        			display("Client is already connected");
+        		} else {
+        			client.openConnection();
+        		}
+        		break;
+        	case "gethost":
+        		display("Host: " + client.getHost());
+        		break;
+        	case "getport":
+        		display("Host: " + client.getPort());
+        		break;
+        	default:
+        		if (command.startsWith("sethost")) {
+        			if (client.isConnected()) {
+        				display("Cannot set host while connected");
+        			} else {
+        				String host = command.substring(8).trim();
+        				client.setHost(host);
+        				display("Host set to: " + host);
+        			}
+        			break;
+        		} else if (command.startsWith("setport")) {
+        			if (client.isConnected()) {
+        				display("Cannot set port while connected");
+        			} else {
+        				try {
+        					int port = Integer.parseInt(command.substring(8).trim());
+							client.setPort(port);
+							display("Port set to: " + port);
+						} catch (NumberFormatException e) {
+							display("Invalid port parameter");
+						}
+        			}
+        			break;
+        		}
+        		display("Unknown command");
+        	}
+        } else {
+        	client.handleMessageFromClientUI(message);
+        }
+        
       }
     } 
     catch (Exception ex) 
